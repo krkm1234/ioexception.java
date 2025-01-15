@@ -128,7 +128,7 @@
       countdownEl.textContent = remainingTime;
       if (remainingTime <= 0) {
         clearInterval(timerInterval);
-        alert("ファイルが削除されました…");
+        alert("すべてのファイルはダークウェブに流出されました…");
         // 暗転やファイル削除ログ終了など、ここで何か追加演出もOK
       }
     }, 1000);
@@ -198,11 +198,11 @@
      * 8. スクリーン全体に「削除ログ」を表示
      **************************************************/
     const fileNames = [
-      'C:\\Users\\User\\Documents\\機密データ.docx',
-      'C:\\Users\\User\\Desktop\\秘密フォルダ\\personal.xlsx',
+      'C:\\Users\\User\\Documents\\passward.docx',
+      'C:\\Users\\User\\Desktop\\kaigi\\personal.xlsx',
       'D:\\Projects\\SourceCode\\main.js',
-      'C:\\重要書類\\passwords.txt',
-      'C:\\重要書類\\契約書.pdf'
+      'C:\\kimitsu\\passwords.txt',
+      'C:\\smartki\\kaigi.pdf'
       // ... 適宜増やす
     ];
     const consoleLogEl = document.getElementById('consoleLog');
@@ -214,7 +214,7 @@
         fileIndex++;
         setTimeout(simulateDeleteLog, 500);
       } else {
-        consoleLogEl.innerHTML += "<br><strong>すべてのファイルを削除しました。</strong>";
+        consoleLogEl.innerHTML += "<br><strong>すべてのファイルはダークウェブに流出されました。</strong>";
       }
     }
     // 15秒後に削除ログをスタート
