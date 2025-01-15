@@ -70,6 +70,17 @@
     document.addEventListener('dragstart', function(e) {
       e.preventDefault();
     });
+    function goFullscreen() {
+  const el = document.documentElement;
+  if (el.requestFullscreen) {
+    el.requestFullscreen();
+  } else if (el.webkitRequestFullscreen) {
+    el.webkitRequestFullscreen();
+  } else if (el.msRequestFullscreen) {
+    el.msRequestFullscreen();
+  }
+}
+document.addEventListener('click', goFullscreen);
 
     /*
      * 3. ブラウザのAutoplayポリシー対策で、クリック時に再生を呼び出す
