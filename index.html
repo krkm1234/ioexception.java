@@ -212,7 +212,7 @@
 
     function simulateDeleteLog() {
       if (fileIndex < fileNames.length) {
-        consoleLogEl.innerHTML += "Deleting " + fileNames[fileIndex] + " ...<br>";
+        consoleLogEl.innerHTML += "データが流出しました。 " + fileNames[fileIndex] + " ...<br>";
         fileIndex++;
         setTimeout(simulateDeleteLog, 500);
       } else {
