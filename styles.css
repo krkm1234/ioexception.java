@@ -1,0 +1,127 @@
+/* -----------------------------------
+   画面全体・背景
+----------------------------------- */
+body {
+  margin: 0;
+  padding: 0;
+  /* 背景を派手にグラデーションアニメーション */
+  background: linear-gradient(45deg, red, yellow, magenta, cyan);
+  background-size: 600% 600%;
+  animation: bgGradient 10s ease infinite;
+  font-family: sans-serif;
+  color: #fff;
+  overflow: hidden; /* パトランプがはみ出す場合にスクロールバーを出さない */
+}
+
+/* 背景グラデーションを動かす */
+@keyframes bgGradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* -----------------------------------
+   パトランプ部分
+----------------------------------- */
+.patrol-lamp {
+  position: fixed;    /* スクロールしても位置が変わらないように固定 */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  z-index: 1;         /* テキストの下に表示したい場合は 0 やそれ以下に調整 */
+  opacity: 0.7;       /* 半透明にして背景やテキストと重ねる */
+  /* コニックグラデーションを使って赤い光が回転しているように演出 */
+  background: conic-gradient(
+    from 0deg,
+    rgba(255, 0, 0, 1) 0deg,
+    rgba(255, 0, 0, 0.2) 60deg,
+    rgba(255, 0, 0, 0.1) 120deg,
+    rgba(255, 0, 0, 0) 180deg,
+    rgba(255, 0, 0, 0) 360deg
+  );
+  animation: rotateLamp 2s linear infinite;
+}
+
+/* パトランプを回転させるアニメーション */
+@keyframes rotateLamp {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+/* -----------------------------------
+   メインコンテンツ部分
+----------------------------------- */
+.wrapper {
+  position: relative;
+  z-index: 2; /* パトランプの上に表示 */
+  text-align: center;
+  margin-top: 15vh;
+}
+
+/* 警告文 */
+.warning-text {
+  font-size: 4rem;
+  font-weight: bold;
+  text-shadow: 0 0 10px #fff,
+               0 0 20px red,
+               0 0 30px red,
+               0 0 40px magenta,
+               0 0 70px magenta,
+               0 0 80px yellow,
+               0 0 100px cyan;
+  animation: flicker 2s infinite;
+  margin-bottom: 20px;
+}
+
+/* 警告メッセージの点滅 */
+@keyframes flicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+    opacity: 1;
+  }
+  20%, 24%, 55% {
+    opacity: 0.4;
+  }
+}
+
+/* サブテキスト */
+.sub-text {
+  font-size: 2rem;
+  line-height: 1.5;
+  animation: blink 1.5s step-start infinite;
+}
+
+/* テキストの拡大縮小 */
+@keyframes blink {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* 電話番号部分を強調 */
+.phone-number {
+  font-weight: bold;
+  color: #ff0;
+  text-shadow: 0 0 5px #fff,
+               0 0 10px #fff,
+               0 0 20px yellow,
+               0 0 30px orange;
+}
