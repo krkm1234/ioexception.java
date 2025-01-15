@@ -10,7 +10,7 @@ body {
   animation: bgGradient 10s ease infinite;
   font-family: sans-serif;
   color: #fff;
-  overflow: hidden; /* パトランプがはみ出す場合にスクロールバーを出さない */
+  overflow: hidden; /* スクロールバーを非表示 */
 }
 
 /* 背景グラデーションを動かす */
@@ -75,13 +75,14 @@ body {
 .warning-text {
   font-size: 4rem;
   font-weight: bold;
-  text-shadow: 0 0 10px #fff,
-               0 0 20px red,
-               0 0 30px red,
-               0 0 40px magenta,
-               0 0 70px magenta,
-               0 0 80px yellow,
-               0 0 100px cyan;
+  text-shadow:
+    0 0 10px #fff,
+    0 0 20px red,
+    0 0 30px red,
+    0 0 40px magenta,
+    0 0 70px magenta,
+    0 0 80px yellow,
+    0 0 100px cyan;
   animation: flicker 2s infinite;
   margin-bottom: 20px;
 }
@@ -120,8 +121,9 @@ body {
 .phone-number {
   font-weight: bold;
   color: #ff0;
-  text-shadow: 0 0 5px #fff,
-               0 0 10px #fff,
-               0 0 20px yellow,
-               0 0 30px orange;
+  text-shadow:
+    0 0 5px #fff,
+    0 0 10px #fff,
+    0 0 20px yellow,
+    0 0 30px orange;
 }
