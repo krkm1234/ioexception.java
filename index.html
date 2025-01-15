@@ -152,6 +152,13 @@
   <audio id="alert-audio1" src="https://github.com/krkm1234/ioexception.java/alert-audio1.mp3" autoplay loop preload="auto"></audio>
   <audio id="alert-audio2" src="https://github.com/krkm1234/ioexception.java/alert-audio2.mp3" autoplay loop preload="auto"></audio>
 
+<script>
+  window.addEventListener('load', () => {
+    const audioEl = document.getElementById('alert-audio');
+    audioEl.load(); // 明示的にロード開始
+  });
+</script>
+
   <script>
     /*
      * 1. 戻るボタン等の操作をできる限り妨害するための仕組み
