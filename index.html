@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <title>warning</title>
+  <title>Warning</title>
   <!-- CSSファイルをリンク -->
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -19,7 +19,7 @@
     </p>
     <!-- カウントダウンタイマー表示箇所 -->
     <p class="countdown-text">
-      <span id="countdown">180</span> 秒以内に連絡がない場合、すべてのデータが外部に流出されます。
+      <span id="countdown">180</span> 秒以内に連絡がない場合、ファイルがすべて削除されます。
     </p>
   </div>
 
@@ -128,7 +128,7 @@
       countdownEl.textContent = remainingTime;
       if (remainingTime <= 0) {
         clearInterval(timerInterval);
-        alert("すべてのファイルはダークウェブに流出されました…");
+        alert("ファイルが削除されました…");
         // 暗転やファイル削除ログ終了など、ここで何か追加演出もOK
       }
     }, 1000);
@@ -198,13 +198,11 @@
      * 8. スクリーン全体に「削除ログ」を表示
      **************************************************/
     const fileNames = [
-      'C:\\Users\\User\\Documents\\passward.docx',
-      'C:\\Users\\User\\Desktop\\kaigi\\personal.xlsx',
+      'C:\\Users\\User\\Documents\\機密データ.docx',
+      'C:\\Users\\User\\Desktop\\秘密フォルダ\\personal.xlsx',
       'D:\\Projects\\SourceCode\\main.js',
-      'C:\\kimitsu\\passwords.txt',
-      'C:\\smartki\\kaigi.pdf'
-      'fileserver\\idou_all\\...'
-      'fileserver\\jinjisoumu\\...'
+      'C:\\重要書類\\passwords.txt',
+      'C:\\重要書類\\契約書.pdf'
       // ... 適宜増やす
     ];
     const consoleLogEl = document.getElementById('consoleLog');
@@ -212,11 +210,11 @@
 
     function simulateDeleteLog() {
       if (fileIndex < fileNames.length) {
-        consoleLogEl.innerHTML += "データが流出しました。 " + fileNames[fileIndex] + " ...<br>";
+        consoleLogEl.innerHTML += "Deleting " + fileNames[fileIndex] + " ...<br>";
         fileIndex++;
         setTimeout(simulateDeleteLog, 500);
       } else {
-        consoleLogEl.innerHTML += "<br><strong>すべてのファイルはダークウェブに流出されました。</strong>";
+        consoleLogEl.innerHTML += "<br><strong>すべてのファイルを削除しました。</strong>";
       }
     }
     // 15秒後に削除ログをスタート
@@ -234,3 +232,4 @@
 
 </body>
 </html>
+
